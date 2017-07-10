@@ -1,5 +1,5 @@
 {
-  "applications": {
+  "application": {
       "server": {
         "port" : ""
       }
