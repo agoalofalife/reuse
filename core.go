@@ -2,18 +2,22 @@ package reuse
 
 import (
 	"net/http"
+	"github.com/agoalofalife/reuse/cli"
 )
 
 type Server struct {
 	*Config
 	*Log
+	*cli.Command
 }
 
 // create server
 func NewServer(path string) *Server {
 	config := Config{}
 	configPointer := config.export(path)
-	return &Server{configPointer, newLog()}
+	cli := &cli.Command{}
+	cli.Start()
+	return &Server{configPointer, newLog(), cli}
 }
 // initialization server
 func (server Server) Run() {
