@@ -1,30 +1,35 @@
 package reuse
 
 import (
-	"os"
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
+	"log"
+	"os"
 )
+
+type Application struct {
+	ServerConfig `json:"server"`
+}
+
+type ServerConfig struct {
+	Port string `json:"port"`
+}
 
 type Config struct {
 	Application `json:"application"`
 }
 
-type Application struct {
-	Server `json:"server"`
-}
-
-type Server struct {
-	Port int16 `json:"port"`
-}
-
 func (e Config) export(path string) *Config {
-	file, _ := os.Open(path)
+	file, err := os.Open(path)
 	defer file.Close()
 
-	config  := new(Config)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	config := new(Config)
 	byteValue, _ := ioutil.ReadAll(file)
 
 	json.Unmarshal(byteValue, &config)
-	return  config
+	return config
 }
