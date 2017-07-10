@@ -1,0 +1,8 @@
+{
+  "applications": {
+      "server": {
+        "port" : ""
+      }
+    }
+
+}
