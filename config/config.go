@@ -1,4 +1,4 @@
-package reuse
+package config
 
 import (
 	"encoding/json"

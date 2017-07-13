@@ -1,4 +1,4 @@
-package reuse
+package core
 
 import (
 	"net/http"

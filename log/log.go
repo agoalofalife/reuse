@@ -1,4 +1,4 @@
-package reuse
+package log
 
 import (
 	"github.com/op/go-logging"

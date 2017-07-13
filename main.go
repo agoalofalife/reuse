@@ -1,4 +1,4 @@
-package reuse
+package main
 
 import "fmt"
 
