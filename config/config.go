@@ -19,7 +19,7 @@ type Config struct {
 	Application `json:"application"`
 }
 
-func (e Config) export(path string) *Config {
+func (e Config) Export(path string) *Config {
 	file, err := os.Open(path)
 	defer file.Close()
 

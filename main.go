@@ -35,8 +35,6 @@ func main() {
 	app.Usage = "Cli application"
 
 	app.Flags = []cli.Flag{
-		cli.BoolFlag{Name: "fancy"},
-		cli.BoolTFlag{Name: "fancier"},
 		cli.DurationFlag{Name: "howlong, H", Value: time.Second * 3},
 	}
 

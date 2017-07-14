@@ -14,7 +14,7 @@ type Log struct {
 	log *logging.Logger
 }
 
-func newLog() *Log {
+func NewLog() *Log {
 	log := Log{logging.MustGetLogger(module)}
 	backend := logging.NewLogBackend(os.Stderr, "", 0)
 	backend1Leveled := logging.NewBackendFormatter(backend, format)
