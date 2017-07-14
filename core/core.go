@@ -5,18 +5,21 @@ import (
 	"github.com/agoalofalife/reuse/config"
 	"github.com/agoalofalife/reuse/log"
 	"os"
+	"github.com/gorilla/mux"
 )
 
 type Server struct {
 	config *config.Config
 	log *log.Log
+	router *mux.Router
 }
+
 
 // create server
 func NewServer(path string) *Server {
 	config := config.Config{}
 	configPointer := config.Export(path)
-	return &Server{configPointer, log.NewLog()}
+	return &Server{configPointer, log.NewLog(), mux.NewRouter()}
 }
 
 // initialization server

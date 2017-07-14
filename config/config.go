@@ -20,6 +20,7 @@ type Config struct {
 	Application `json:"application"`
 }
 
+// read info from reuse.configuration file and insert struct Config
 func (e Config) Export(path string) *Config {
 	file, err := os.Open(path)
 	defer file.Close()
