@@ -40,37 +40,5 @@ func main() {
 	}
 
 	app.Commands = manager.command
-	//[]cli.Command{
-	//{
-	//	Name:    "generate-config",
-	//	Usage:   "Adds a copy of the configuration file",
-	//	Action:  func(c *cli.Context) error {
-	//		fmt.Println("added task: ", c.Args().First())
-	//		return nil
-	//	},
-	//},
-	//{
-	//	Name:        "template",
-	//	Usage:       "options for task templates",
-	//	Subcommands: []cli.Command{
-	//		{
-	//			Name:  "add",
-	//			Usage: "add a new template",
-	//			Action: func(c *cli.Context) error {
-	//				fmt.Println("new task template: ", c.Args().First())
-	//				return nil
-	//			},
-	//		},
-	//		{
-	//			Name:  "remove",
-	//			Usage: "remove an existing template",
-	//			Action: func(c *cli.Context) error {
-	//				fmt.Println("removed task template: ", c.Args().First())
-	//				return nil
-	//			},
-	//		},
-	//	},
-	//},
-	//}
 	app.Run(os.Args)
 }
