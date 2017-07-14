@@ -11,7 +11,7 @@ var format = logging.MustStringFormatter(
 
 const module = `log`
 type Log struct {
-	log *logging.Logger
+	Log *logging.Logger
 }
 
 func NewLog() *Log {

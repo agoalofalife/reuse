@@ -20,6 +20,7 @@ func main() {
 	app := cli.NewApp()
 	manager := manager{}
 	manager.add(commands.CopyConfig())
+	manager.add(commands.StartServer())
 
 	cli.VersionPrinter = func(c *cli.Context) {
 		fmt.Fprintf(c.App.Writer, "version=%s\n", c.App.Version)
