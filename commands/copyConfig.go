@@ -5,6 +5,7 @@ import (
 	"os"
 	"io"
 	"fmt"
+	"github.com/shiena/ansicolor"
 )
 
 const configName  = "example.config.json"
@@ -16,8 +17,9 @@ func CopyConfig() cli.Command {
 		 Usage: "Adds a copy of the configuration file",
 		 Action: func(c *cli.Context) error {
 			 dir, _ := os.Getwd()
-
-			 fmt.Println("added task: ", dir + "/stubs/" + configName)
+			 w := ansicolor.NewAnsiColorWriter(os.Stdout)
+			 text := "%sFile " + os.ExpandEnv(gopath) + "/" + "reuse.config.json " +"create success \n"
+			 fmt.Fprintf(w,text, "\x1b[32m")
 			 cp(os.ExpandEnv(gopath) + "/" + "reuse.config.json", dir + "/stubs/" + configName,)
 			 //fmt.Println("added task: ",dir + "/" + configName)
 			 //fmt.Println("added task: ", c.Args().First())
