@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"github.com/agoalofalife/reuse/config"
 	"github.com/agoalofalife/reuse/log"
+	"os"
 )
 
 type Server struct {
@@ -20,6 +21,9 @@ func NewServer(path string) *Server {
 
 // initialization server
 func (server Server) Run() {
+	fs := http.FileServer(http.Dir(os.ExpandEnv("$GOPATH") + "/" + server.config.StaticUrl))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	server.log.Log.Notice(`Server is running on port ` + server.config.Port + `...`)
 	http.ListenAndServe(`:` + server.config.Port, nil)
 }

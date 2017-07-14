@@ -13,6 +13,7 @@ type Application struct {
 
 type ServerConfig struct {
 	Port string `json:"port"`
+	StaticUrl string `json:"staticUrl"`
 }
 
 type Config struct {
