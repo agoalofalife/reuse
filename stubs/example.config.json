@@ -2,6 +2,7 @@
   "application": {
       "server": {
         "port" : "",
+        "staticPath":"",
         "staticUrl":""
       }
     }

@@ -6,7 +6,6 @@ import (
 	"github.com/agoalofalife/reuse/log"
 	"os"
 	"github.com/gorilla/mux"
-	"fmt"
 )
 
 type Server struct {
