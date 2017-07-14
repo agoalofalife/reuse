@@ -5,7 +5,7 @@ import (
 	"os"
 	"fmt"
 	"github.com/shiena/ansicolor"
-	"github.com/agoalofalife/reuse/Support"
+	"github.com/agoalofalife/reuse/support"
 )
 
 const configName  = "example.config.json"
@@ -21,7 +21,7 @@ func CopyConfig() cli.Command {
 			 w := ansicolor.NewAnsiColorWriter(os.Stdout)
 			 text := "%sFile %s" + os.ExpandEnv(goPath) + "/" + "reuse.config.json " +"%screate success \n"
 			 fmt.Fprintf(w,text, "\x1b[32m", "\x1b[92m", "\x1b[32m")
-			 Support.Cp(os.ExpandEnv(goPath) + "/" + "reuse.config.json", dir + "/stubs/" + configName,)
+			 support.Cp(os.ExpandEnv(goPath) + "/" + "reuse.config.json", dir + "/stubs/" + configName,)
 			 return nil
 		 }}
 }
