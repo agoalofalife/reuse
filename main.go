@@ -2,50 +2,74 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"github.com/urfave/cli"
+	"time"
 )
 
+type manager struct {
+	command []cli.Command
+}
+
+func (manager *manager) add(command cli.Command)  {
+	manager.command = append(manager.command, command)
+}
+
 func main(){
-
-
 	app := cli.NewApp()
-	// EXAMPLE: Append to an existing template
-	cli.AppHelpTemplate = fmt.Sprintf(`%s
+	manager := manager{}
 
-WEBSITE: http://awesometown.example.com
-
-SUPPORT: support@awesometown.example.com
-
-`, cli.AppHelpTemplate)
-
-	// EXAMPLE: Override a template
-	cli.AppHelpTemplate = `NAME:
-   {{.Name}} - {{.Usage}}
-USAGE:
-   {{.HelpName}} {{if .VisibleFlags}}[global options]{{end}}{{if .Commands}} command [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}
-   {{if len .Authors}}
-AUTHOR:
-   {{range .Authors}}{{ . }}{{end}}
-   {{end}}{{if .Commands}}
-COMMANDS:
-{{range .Commands}}{{if not .HideHelp}}   {{join .Names ", "}}{{ "\t"}}{{.Usage}}{{ "\n" }}{{end}}{{end}}{{end}}{{if .VisibleFlags}}
-GLOBAL OPTIONS:
-   {{range .VisibleFlags}}{{.}}
-   {{end}}{{end}}{{if .Copyright }}
-COPYRIGHT:
-   {{.Copyright}}
-   {{end}}{{if .Version}}
-VERSION:
-   {{.Version}}
-   {{end}}
-`
-
-	// EXAMPLE: Replace the `HelpPrinter` func
-	//cli.HelpPrinter = func(w io.Writer, templ string, data interface{}) {
-	//	fmt.Println("Ha HA.  I pwnd the help!!1")
-	//}
+	cli.VersionPrinter = func(c *cli.Context) {
+		fmt.Fprintf(c.App.Writer, "version=%s\n", c.App.Version)
+	}
 	app.Name = "reuse"
-	app.Authors = []cli.Author{cli.Author{"Ilya Chubarov", "agoalofalife@gmail.com"}}
-	app.Run(os.Args)
+	app.Authors = []cli.Author{
+		cli.Author{
+			Name: "Ilya Chubarov",
+			Email: "agoalofalife@gmail.com",
+		},
+	}
+	app.Compiled = time.Now()
+	app.Usage = "Cli application"
+
+
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{Name: "fancy"},
+		cli.BoolTFlag{Name: "fancier"},
+		cli.DurationFlag{Name: "howlong, H", Value: time.Second * 3},
+	}
+
+	app.Commands = manager.command
+		//[]cli.Command{
+		//{
+		//	Name:    "generate-config",
+		//	Usage:   "Adds a copy of the configuration file",
+		//	Action:  func(c *cli.Context) error {
+		//		fmt.Println("added task: ", c.Args().First())
+		//		return nil
+		//	},
+		//},
+		//{
+		//	Name:        "template",
+		//	Usage:       "options for task templates",
+		//	Subcommands: []cli.Command{
+		//		{
+		//			Name:  "add",
+		//			Usage: "add a new template",
+		//			Action: func(c *cli.Context) error {
+		//				fmt.Println("new task template: ", c.Args().First())
+		//				return nil
+		//			},
+		//		},
+		//		{
+		//			Name:  "remove",
+		//			Usage: "remove an existing template",
+		//			Action: func(c *cli.Context) error {
+		//				fmt.Println("removed task template: ", c.Args().First())
+		//				return nil
+		//			},
+		//		},
+		//	},
+		//},
+	//}
+	//app.Run(os.Args)
 }
