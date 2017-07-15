@@ -24,6 +24,7 @@ func NewServer(path string) *Server {
 
 // initialization server
 func (server Server) Run() {
+	// clean first symbol '/'
 	if strings.Index(server.config.StaticUrl, "/") == 0 {
 		server.config.StaticUrl = server.config.StaticUrl[1:]
 	}
