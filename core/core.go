@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/agoalofalife/reuse/config"
 	"github.com/agoalofalife/reuse/log"
 	"github.com/gorilla/mux"
@@ -25,8 +24,6 @@ func NewServer(path string) *Server {
 
 // initialization server
 func (server Server) Run() {
-	//fs := http.FileServer(http.Dir(os.ExpandEnv("$GOPATH") + "/" + server.config.StaticUrl))
-	//http.Handle("/static/", http.StripPrefix("/static/", fs))
 	if strings.Index(server.config.StaticUrl, "/") == 0 {
 		server.config.StaticUrl = server.config.StaticUrl[1:]
 	}
