@@ -1,19 +1,20 @@
 package core
 
 import (
-	"net/http"
+	"fmt"
 	"github.com/agoalofalife/reuse/config"
 	"github.com/agoalofalife/reuse/log"
-	"os"
 	"github.com/gorilla/mux"
+	"net/http"
+	"os"
+	"strings"
 )
 
 type Server struct {
 	config *config.Config
-	log *log.Log
+	log    *log.Log
 	router *mux.Router
 }
-
 
 // create server
 func NewServer(path string) *Server {
@@ -26,8 +27,12 @@ func NewServer(path string) *Server {
 func (server Server) Run() {
 	//fs := http.FileServer(http.Dir(os.ExpandEnv("$GOPATH") + "/" + server.config.StaticUrl))
 	//http.Handle("/static/", http.StripPrefix("/static/", fs))
+	if strings.Index(server.config.StaticUrl, "/") == 0 {
+		server.config.StaticUrl = server.config.StaticUrl[1:]
+	}
+
 	server.router.PathPrefix("/" + server.config.StaticUrl).Handler(
-		http.StripPrefix("/" + server.config.StaticUrl, http.FileServer(http.Dir(os.ExpandEnv("$GOPATH") + "/" + server.config.StaticPath))))
+		http.StripPrefix("/"+server.config.StaticUrl, http.FileServer(http.Dir(os.ExpandEnv("$GOPATH")+"/"+server.config.StaticPath))))
 	server.log.Log.Notice(`Server is running on port ` + server.config.Port + `...`)
-	http.ListenAndServe(`:` + server.config.Port, server.router)
+	http.ListenAndServe(`:`+server.config.Port, server.router)
 }
