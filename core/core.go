@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+type Router interface {
+	HandleFunc(pattern string, handler func(http.ResponseWriter, *http.Request))
+	PathPrefix(tpl string) *mux.Route
+}
+
 type Server struct {
 	config *config.Config
 	log    *log.Log
