@@ -1,13 +1,16 @@
-package main
+package reuse
 
 import (
 	"fmt"
 	"github.com/agoalofalife/reuse/commands"
+	"github.com/agoalofalife/reuse/core"
 	store "github.com/agoalofalife/storekeeper"
 	"github.com/urfave/cli"
 	"os"
 	"time"
 )
+
+const goPath = "$GOPATH"
 
 type Application struct {
 	Container *store.Store
@@ -21,9 +24,13 @@ func (manager *manager) add(command cli.Command) {
 	manager.command = append(manager.command, command)
 }
 
-func main() {
+func Run() {
 	app := Application{store.New()}
 	app.Container.SetInstance(`command`, cli.NewApp())
+
+	app.Container.Bind(`core`, func(s *store.Store) *core.Server {
+		return core.NewServer(os.ExpandEnv(goPath) + "/" + "reuse.config.json")
+	})
 
 	appCommand := app.Container.Extract(`command`).(*cli.App)
 

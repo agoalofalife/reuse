@@ -22,6 +22,7 @@ type Server struct {
 
 // create server
 func NewServer(path string) *Server {
+
 	conf := config.Config{}
 	configPointer := conf.Export(path)
 	return &Server{configPointer, log.NewLog(), mux.NewRouter()}
