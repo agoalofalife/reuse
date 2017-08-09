@@ -1,6 +1,7 @@
 package reuse
 
 import (
+	"fmt"
 	"github.com/agoalofalife/reuse/log"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -14,12 +15,11 @@ type Server struct {
 	StaticUrl  string
 }
 
-func NewServer(parameters map[string]string) (server *Server, err string) {
+func NewServer(parameters map[string]string) (server *Server, err error) {
 	if parameters["port"] != "" && parameters["staticPath"] != "" && parameters["staticUrl"] != "" {
 		return &Server{parameters["port"], parameters["staticPath"], parameters["staticUrl"]}, err
 	} else {
-		err = `Check input parameters : port , staticPath, staticUrl`
-		return nil, err
+		return nil, fmt.Errorf("Check input parameters : port , staticPath, staticUrl")
 	}
 
 }
