@@ -20,7 +20,9 @@ type Application struct {
 	// container store struct in application
 	Container *store.Store
 	// configuration module from beego
-	Config config.Configer
+	//Config config.Configer
+	//// default router from gorilla mux
+	//Router *mux.Router
 }
 
 // so start App..
@@ -30,6 +32,8 @@ func Run() {
 }
 
 func loadDependencies() {
+	app = Application{store.New()}
+
 	// TODO add the ability change path configuration for remote
 	_, filename, _, _ := runtime.Caller(1)
 	fileConf := path.Join(path.Dir(filename), relativePathConf)
@@ -52,6 +56,4 @@ func loadDependencies() {
 	app.Container.SetInstance(`server`, server)
 	app.Container.SetInstance(`router`, r)
 	app.Container.SetInstance(`log`, log.NewLog())
-
-	app = Application{store.New(), configuration}
 }
