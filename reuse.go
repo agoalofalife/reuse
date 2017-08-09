@@ -9,26 +9,39 @@ import (
 	"runtime"
 )
 
+const (
+	relativePathConf = `/config/app.conf`
+	typeConf         = `ini`
+)
+
 var app Application
 
 type Application struct {
+	// container store struct in application
 	Container *store.Store
+	// configuration module from beego
+	Config config.Configer
 }
 
+// so start App..
 func Run() {
-	app = Application{store.New()}
 	loadDependencies()
 	app.Container.Extract(`server`).(*Server).Run()
 }
 
 func loadDependencies() {
-	server, err := NewServer(map[string]string{"port": "8080", "staticPath": "/", "staticUrl": "/static"})
+	// TODO add the ability change path configuration for remote
+	_, filename, _, _ := runtime.Caller(1)
+	fileConf := path.Join(path.Dir(filename), relativePathConf)
+	configuration, errConfig := config.NewConfig(typeConf, fileConf)
+
+	server, err := NewServer(map[string]string{"port": configuration.String(`port`),
+		"staticPath": configuration.String(`staticPath`),
+		"staticUrl":  configuration.String(`staticUrl`)})
+
 	if err != nil {
 		panic(err.Error())
 	}
-	_, filename, _, _ := runtime.Caller(1)
-	fileConf := path.Join(path.Dir(filename), "/config/app.conf")
-	configuration, errConfig := config.NewConfig("ini", fileConf)
 
 	if errConfig != nil {
 		panic(errConfig.Error())
@@ -40,4 +53,5 @@ func loadDependencies() {
 	app.Container.SetInstance(`router`, r)
 	app.Container.SetInstance(`log`, log.NewLog())
 
+	app = Application{store.New(), configuration}
 }
