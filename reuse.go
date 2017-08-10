@@ -4,12 +4,9 @@ import (
 	"github.com/agoalofalife/reuse/log"
 	"github.com/agoalofalife/reuse/supports/files"
 	store "github.com/agoalofalife/storekeeper"
-	"github.com/astaxie/beego/config"
 	"github.com/gorilla/mux"
 	"os"
-	"path"
 	"path/filepath"
-	"runtime"
 )
 
 var app Application
@@ -38,27 +35,9 @@ func bootstrapping() {
 	}
 
 	NewConfig(appConfigPath).LoadModule(app)
-
-	// TODO add the ability change path configuration for remote
-	_, filename, _, _ := runtime.Caller(1)
-	fileConf := path.Join(path.Dir(filename), relativePathConf)
-	configuration, errConfig := config.NewConfig(typeConf, fileConf)
-
-	server, err := NewServer(map[string]string{"port": configuration.String(`port`),
-		"staticPath": configuration.String(`staticPath`),
-		"staticUrl":  configuration.String(`staticUrl`)})
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	if errConfig != nil {
-		panic(errConfig.Error())
-	}
+	NewServer().LoadModule(app)
 
 	r := mux.NewRouter()
-	app.Container.SetInstance(`config`, configuration)
-	app.Container.SetInstance(`server`, server)
 	app.Container.SetInstance(`router`, r)
 	app.Container.SetInstance(`log`, log.NewLog())
 }

@@ -1,8 +1,8 @@
 package reuse
 
 import (
-	"fmt"
 	"github.com/agoalofalife/reuse/log"
+	"github.com/astaxie/beego/config"
 	"github.com/gorilla/mux"
 	"net/http"
 	"os"
@@ -15,25 +15,31 @@ type Server struct {
 	StaticUrl  string
 }
 
-func NewServer(parameters map[string]string) (server *Server, err error) {
-	if parameters["port"] != "" && parameters["staticPath"] != "" && parameters["staticUrl"] != "" {
-		return &Server{parameters["port"], parameters["staticPath"], parameters["staticUrl"]}, err
-	} else {
-		return nil, fmt.Errorf("Check input parameters : port , staticPath, staticUrl")
-	}
+func NewServer() (server *Server) {
+	conf := app.Container.Extract(`config`).(config.Configer)
 
+	if conf.String(`port`) != "" {
+		server := &Server{conf.String(`port`), conf.String(`staticPath`), conf.String(`staticUrl`)}
+		return server
+	}
+	panic(`Not set port for server configuration!`)
 }
 
-func (server Server) Run() {
+func (s *Server) LoadModule(app Application) bool {
+	app.Container.SetInstance(`server`, s)
+	return true
+}
+
+func (s Server) Run() {
 	// clean first symbol '/'
-	if strings.Index(server.StaticUrl, "/") == 0 {
-		server.StaticUrl = server.StaticUrl[1:]
+	if strings.Index(s.StaticUrl, "/") == 0 {
+		s.StaticUrl = s.StaticUrl[1:]
 	}
 	router := app.Container.Extract(`router`).(*mux.Router)
 	loger := app.Container.Extract(`log`).(*log.Log)
 
-	router.PathPrefix("/" + server.StaticUrl).Handler(
-		http.StripPrefix("/"+server.StaticUrl, http.FileServer(http.Dir(os.ExpandEnv("$GOPATH")+"/"+server.StaticPath))))
-	loger.Log.Notice(`Server is running on port ` + server.Port + `...`)
-	http.ListenAndServe(`:`+server.Port, router)
+	router.PathPrefix("/" + s.StaticUrl).Handler(
+		http.StripPrefix("/"+s.StaticUrl, http.FileServer(http.Dir(os.ExpandEnv("$GOPATH")+"/"+s.StaticPath))))
+	loger.Log.Notice(`Server is running on port ` + s.Port + `...`)
+	http.ListenAndServe(`:`+s.Port, router)
 }
