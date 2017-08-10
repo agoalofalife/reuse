@@ -3,6 +3,7 @@ package reuse
 import (
 	"fmt"
 	"github.com/agoalofalife/reuse/log"
+	"github.com/agoalofalife/reuse/supports/files"
 	store "github.com/agoalofalife/storekeeper"
 	"github.com/astaxie/beego/config"
 	"github.com/gorilla/mux"
@@ -36,22 +37,17 @@ func Run() {
 
 func bootstrapping() {
 	app = kernel()
-	//filepath.Dir()
-	//fmt.Println(filepath.Abs(filepath.Dir(os.Args[0])))
-	workPath, _ := os.Getwd()
-	//fmt.Println(os.Getwd())
-	AppPath, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 
-	appConfigPath := filepath.Join(workPath, "conf", "app.conf")
+	workDir, _ := os.Getwd()
+	AppPath, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	appConfigPath := filepath.Join(workDir, "conf", "app.conf")
 	//fmt.Println(appConfigPath)
 	//appConfigPath := filepath.Join(AppPath, "conf", "app.conf")
 
-	fmt.Println(AppPath)
-	os.Exit(0)
-
-	if !FileExists(appConfigPath) {
+	fmt.Println(files.FileExists(appConfigPath), `?12`)
+	if !files.FileExists(appConfigPath) {
 		appConfigPath = filepath.Join(AppPath, "conf", "app.conf")
-		if !FileExists(appConfigPath) {
+		if !files.FileExists(appConfigPath) {
 			//AppConfig = &beegoAppConfig{innerConfig: config.NewFakeConfig()}
 			return
 		}
@@ -89,15 +85,4 @@ func kernel() Application {
 		app.Container = store.New()
 	}
 	return app
-}
-
-func FileExists(path string) bool {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	return true
 }
