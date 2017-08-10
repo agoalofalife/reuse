@@ -1,4 +1,4 @@
-package log
+package reuse
 
 import (
 	"github.com/op/go-logging"
@@ -10,6 +10,7 @@ var format = logging.MustStringFormatter(
 )
 
 const module = `log`
+
 type Log struct {
 	Log *logging.Logger
 }
@@ -20,4 +21,9 @@ func NewLog() *Log {
 	backend1Leveled := logging.NewBackendFormatter(backend, format)
 	logging.SetBackend(backend1Leveled)
 	return &log
+}
+
+func (log *Log) LoadModule(app Application) bool {
+	app.Container.SetInstance(`log`, log)
+	return true
 }

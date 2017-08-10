@@ -5,8 +5,7 @@ import (
 )
 
 const (
-	relativePathConf = `/config/app.conf`
-	typeConf         = `ini`
+	typeConf = `ini`
 )
 
 type Config struct {

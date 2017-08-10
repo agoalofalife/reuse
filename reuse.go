@@ -1,10 +1,8 @@
 package reuse
 
 import (
-	"github.com/agoalofalife/reuse/log"
 	"github.com/agoalofalife/reuse/supports/files"
 	store "github.com/agoalofalife/storekeeper"
-	"github.com/gorilla/mux"
 	"os"
 	"path/filepath"
 )
@@ -36,10 +34,9 @@ func bootstrapping() {
 
 	NewConfig(appConfigPath).LoadModule(app)
 	NewServer().LoadModule(app)
+	NewLog().LoadModule(app)
+	NewRouter().LoadModule(app)
 
-	r := mux.NewRouter()
-	app.Container.SetInstance(`router`, r)
-	app.Container.SetInstance(`log`, log.NewLog())
 }
 
 func kernel() Application {
