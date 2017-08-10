@@ -30,38 +30,41 @@ type Application struct {
 
 // so start App..
 func Run() {
+	bootstrapping()
 	app.Container.Extract(`server`).(*Server).Run()
 }
 
-func Bootstrapping() {
-	app = Application{store.New()}
-
+func bootstrapping() {
+	app = kernel()
+	//filepath.Dir()
 	//fmt.Println(filepath.Abs(filepath.Dir(os.Args[0])))
-	//workPath,_ :=  os.Getwd()
-	fmt.Println(os.Getwd())
+	workPath, _ := os.Getwd()
+	//fmt.Println(os.Getwd())
 	AppPath, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 
-	//appConfigPath := filepath.Join(workPath, "conf", "app.conf")
+	appConfigPath := filepath.Join(workPath, "conf", "app.conf")
 	//fmt.Println(appConfigPath)
-	appConfigPath := filepath.Join(AppPath, "conf", "app.conf")
-	fmt.Println(appConfigPath)
+	//appConfigPath := filepath.Join(AppPath, "conf", "app.conf")
+
+	fmt.Println(AppPath)
 	os.Exit(0)
 
-	//if !utils.FileExists(appConfigPath) {
-	//	appConfigPath = filepath.Join(AppPath, "conf", "app.conf")
-	//	//if !utils.FileExists(appConfigPath) {
-	//	//	AppConfig = &beegoAppConfig{innerConfig: config.NewFakeConfig()}
-	//	//	return
-	//	//}
-	//}
+	if !FileExists(appConfigPath) {
+		appConfigPath = filepath.Join(AppPath, "conf", "app.conf")
+		if !FileExists(appConfigPath) {
+			//AppConfig = &beegoAppConfig{innerConfig: config.NewFakeConfig()}
+			return
+		}
+	}
 	//if err = parseConfig(appConfigPath); err != nil {
 	//	panic(err)
 	//}
+
 	// TODO add the ability change path configuration for remote
 	_, filename, _, _ := runtime.Caller(1)
 	fileConf := path.Join(path.Dir(filename), relativePathConf)
 	configuration, errConfig := config.NewConfig(typeConf, fileConf)
-	fmt.Println(filename, `???a`)
+
 	server, err := NewServer(map[string]string{"port": configuration.String(`port`),
 		"staticPath": configuration.String(`staticPath`),
 		"staticUrl":  configuration.String(`staticUrl`)})
@@ -79,4 +82,22 @@ func Bootstrapping() {
 	app.Container.SetInstance(`server`, server)
 	app.Container.SetInstance(`router`, r)
 	app.Container.SetInstance(`log`, log.NewLog())
+}
+
+func kernel() Application {
+	if app.Container == nil {
+		app.Container = store.New()
+	}
+	return app
+}
+
+func FileExists(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
