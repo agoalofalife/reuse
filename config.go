@@ -1,6 +1,9 @@
 package reuse
 
-import "github.com/astaxie/beego/config"
+import (
+	"github.com/astaxie/beego/config"
+	"github.com/agoalofalife/storekeeper"
+)
 
 const (
 	relativePathConf = `/config/app.conf`
@@ -23,4 +26,8 @@ func NewConfig(configPath string) *Config {
 	pointerConfig := &Config{configPath, configuration}
 	app.Container.SetInstance(`config`, pointerConfig)
 	return pointerConfig
+}
+
+func LoadModule(app Application) bool {
+
 }

@@ -1,6 +1,6 @@
 package reuse
 
 // loading modules system in App
-func loadModules()  {
-	
+type Module interface {
+	LoadModule(app Application) bool
 }
