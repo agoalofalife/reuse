@@ -2,7 +2,6 @@ package reuse
 
 import (
 	"github.com/astaxie/beego/config"
-	"github.com/agoalofalife/storekeeper"
 )
 
 const (
@@ -28,6 +27,12 @@ func NewConfig(configPath string) *Config {
 	return pointerConfig
 }
 
-func LoadModule(app Application) bool {
+func (c Config) LoadModule(app Application) bool {
+	configuration, err := config.NewConfig(typeConf, c.pathToFile)
 
+	if err != nil {
+		panic(err.Error())
+	}
+	app.Container.SetInstance(`config`, configuration)
+	return true
 }

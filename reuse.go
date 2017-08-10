@@ -37,7 +37,7 @@ func bootstrapping() {
 		panic(`File configuration is not set!`)
 	}
 
-	NewConfig(appConfigPath)
+	NewConfig(appConfigPath).LoadModule(app)
 
 	// TODO add the ability change path configuration for remote
 	_, filename, _, _ := runtime.Caller(1)
