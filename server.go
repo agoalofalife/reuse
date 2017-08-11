@@ -1,9 +1,7 @@
 package reuse
 
 import (
-	"github.com/agoalofalife/reuse/log"
 	"github.com/astaxie/beego/config"
-	"github.com/gorilla/mux"
 	"net/http"
 	"os"
 	"strings"
@@ -35,11 +33,12 @@ func (s Server) Run() {
 	if strings.Index(s.StaticUrl, "/") == 0 {
 		s.StaticUrl = s.StaticUrl[1:]
 	}
-	router := app.Container.Extract(`router`).(*mux.Router)
-	loger := app.Container.Extract(`log`).(*log.Log)
+	router := app.Container.Extract(`router`).(*Router).responsible
+	loger := app.Container.Extract(`log`).(*Log)
 
 	router.PathPrefix("/" + s.StaticUrl).Handler(
 		http.StripPrefix("/"+s.StaticUrl, http.FileServer(http.Dir(os.ExpandEnv("$GOPATH")+"/"+s.StaticPath))))
+	// TODO fix ExpandEnv -> os.Getwd()
 	loger.Log.Notice(`Server is running on port ` + s.Port + `...`)
 	http.ListenAndServe(`:`+s.Port, router)
 }

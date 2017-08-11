@@ -36,7 +36,6 @@ func bootstrapping() {
 	NewServer().LoadModule(app)
 	NewLog().LoadModule(app)
 	NewRouter().LoadModule(app)
-
 }
 
 func kernel() Application {
